@@ -10,9 +10,13 @@ import android.os.Binder;
 import android.os.IBinder;
 import android.os.PowerManager;
 import android.util.Log;
+import java.util.Random;
+import android.app.Notification;
+import android.app.PendingIntent;
 
 import java.util.ArrayList;
 
+import at.ac.univie.a1209967.millionsongdataset.R;
 import at.ac.univie.a1209967.millionsongdataset.entities.Song;
 
 /**
@@ -31,8 +35,15 @@ public class MusicService extends Service implements
     //current position
     private int songPosn;
 
+    private boolean shuffle=false;
+    private Random rand;
+
+    private String songTitle="";
+    private static final int NOTIFY_ID=1;
+
     private final IBinder musicBind = new MusicBinder();
 
+    @Override
     public void onCreate(){
         //create the service
         super.onCreate();
@@ -41,14 +52,38 @@ public class MusicService extends Service implements
         //create player
         player = new MediaPlayer();
 
+        rand=new Random();
+
         initMusicPlayer();
+    }
+
+    @Override
+    public void onPrepared(MediaPlayer mp) {
+        //start playback
+        mp.start();
+
+        Intent notIntent = new Intent(this, at.ac.univie.a1209967.millionsongdataset.activities.MainActivity.class);
+        notIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        PendingIntent pendInt = PendingIntent.getActivity(this, 0,
+                notIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        Notification.Builder builder = new Notification.Builder(this);
+
+        builder.setContentIntent(pendInt)
+                .setSmallIcon(R.drawable.play)
+                .setTicker(songTitle)
+                .setOngoing(true)
+                .setContentTitle("Playing")
+        .setContentText(songTitle);
+        Notification not = builder.build();
+
+        startForeground(NOTIFY_ID, not);
     }
 
     public void initMusicPlayer(){
         player.setWakeMode(getApplicationContext(),
                 PowerManager.PARTIAL_WAKE_LOCK);
         player.setAudioStreamType(AudioManager.STREAM_MUSIC);
-        // TODO has this to be in the Overriden methods?
         player.setOnPreparedListener(this);
         player.setOnCompletionListener(this);
         player.setOnErrorListener(this);
@@ -59,6 +94,7 @@ public class MusicService extends Service implements
 
         //get song
         Song playSong = songs.get(songPosn);
+        songTitle=playSong.getTitle();
         //get id
         long currSong = playSong.getID();
         //set uri
@@ -70,6 +106,7 @@ public class MusicService extends Service implements
             player.setDataSource(getApplicationContext(), trackUri);
         }
         catch(Exception e){
+            System.err.println(trackUri.toString());
             Log.e("MUSIC SERVICE", "Error setting data source", e);
         }
 
@@ -80,6 +117,11 @@ public class MusicService extends Service implements
         songPosn=songIndex;
     }
 
+    public void setShuffle(){
+        if(shuffle) shuffle=false;
+        else shuffle=true;
+    }
+
     public void setList(ArrayList<Song> theSongs){
         songs=theSongs;
     }
@@ -88,6 +130,52 @@ public class MusicService extends Service implements
         public MusicService getService() {
             return MusicService.this;
         }
+    }
+
+    public int getPosn(){
+        return player.getCurrentPosition();
+    }
+
+    public int getDur(){
+        return player.getDuration();
+    }
+
+    public boolean isPng(){
+        return player.isPlaying();
+    }
+
+    public void pausePlayer(){
+        player.pause();
+    }
+
+    public void seek(int posn){
+        player.seekTo(posn);
+    }
+
+    public void go(){
+        player.start();
+    }
+
+    public void playPrev(){
+        songPosn--;
+        if(songPosn < 0) songPosn=songs.size()-1;
+        playSong();
+    }
+
+    //skip to next
+    public void playNext(){
+        if(shuffle){
+            int newSong = songPosn;
+            while(newSong==songPosn){
+                newSong=rand.nextInt(songs.size());
+            }
+            songPosn=newSong;
+        }
+        else{
+            songPosn++;
+            if(songPosn>=songs.size()) songPosn=0;
+        }
+        playSong();
     }
 
 
@@ -105,19 +193,23 @@ public class MusicService extends Service implements
 
     @Override
     public void onCompletion(MediaPlayer mp) {
-
+        if(player.getCurrentPosition()>0){
+            mp.reset();
+            playNext();
+        }
     }
 
     @Override
     public boolean onError(MediaPlayer mp, int what, int extra) {
+        mp.reset();
         return false;
     }
 
     @Override
-    public void onPrepared(MediaPlayer mp) {
-        //start playback
-        mp.start();
+    public void onDestroy() {
+        stopForeground(true);
     }
+
 }
 
 
