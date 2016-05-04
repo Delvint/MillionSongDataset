@@ -21,7 +21,7 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-            <service android:name="at.ac.univie.a1209967.millionsongdataset.adapter.MusicService" />
+            <service android:name="at.ac.univie.a1209967.millionsongdataset.service.MusicService" />
         </activity>
     </application>
 

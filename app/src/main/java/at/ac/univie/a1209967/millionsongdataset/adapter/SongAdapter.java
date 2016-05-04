@@ -15,6 +15,8 @@ import at.ac.univie.a1209967.millionsongdataset.entities.Song;
 
 /**
  * Created by Adlbert on 02.05.2016.
+ * Diese Klasse wurde aus dem Tutorium zur Erstellung eines Musikplayers entnommen.
+ * http://code.tutsplus.com/tutorials/create-a-music-player-on-android-project-setup--mobile-22764
  */
 public class SongAdapter extends BaseAdapter {
 
@@ -45,9 +47,10 @@ public class SongAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
+
         //map to song layout
         LinearLayout songLay = (LinearLayout)songInf.inflate
-                (R.layout.song, parent, false);
+                (R.layout.activity_song, parent, false);
         //get title and artist views
         TextView songView = (TextView)songLay.findViewById(R.id.song_title);
         TextView artistView = (TextView)songLay.findViewById(R.id.song_artist);
