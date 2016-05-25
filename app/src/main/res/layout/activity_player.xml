@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:weightSum="1">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="52dp">
+
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:text="History"
+            android:id="@+id/historyBtn"
+            android:layout_weight=".2"/>
+
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:text="Search"
+            android:id="@+id/searchBtn"
+            android:layout_weight=".2"/>
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:text="Favourites"
+            android:id="@+id/favBtn"
+            android:layout_weight=".2"/>
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:text="Suggestions"
+            android:id="@+id/sugBtn"
+            android:layout_weight=".2"/>
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:text="Menu"
+            android:id="@+id/menuBtn"
+            android:layout_weight=".2"/>
+
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="162dp"
+        android:layout_weight="0.78">
+
+        <ImageButton
+            android:src="@drawable/play"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:id="@+id/playBtn"
+            android:layout_above="@+id/seekBar"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="75dp" />
+
+
+        <SeekBar
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/seekBar"
+            android:layout_row="15"
+            android:layout_column="0"
+            android:layout_marginLeft="0dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentStart="true" />
+
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/radioButton"
+            android:layout_alignTop="@+id/playBtn"
+            android:layout_toStartOf="@+id/playBtn"
+            android:layout_marginTop="36dp"
+            android:layout_marginRight="50dp" />
+
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/radioButton2"
+            android:layout_toEndOf="@+id/playBtn"
+            android:layout_above="@+id/playBtn"
+            android:layout_marginLeft="50dp" />
+
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/radioButton3"
+            android:layout_marginLeft="50dp"
+            android:layout_alignTop="@+id/radioButton"
+            android:layout_toEndOf="@+id/playBtn" />
+
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/radioButton4"
+            android:layout_alignStart="@+id/radioButton"
+            android:layout_above="@+id/playBtn"
+            android:layout_marginRight="50dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="Titel"
+            android:id="@+id/titelView"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="45dp"
+            android:textSize="32sp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Interpret"
+            android:id="@+id/intView"
+            android:layout_below="@+id/titelView"
+            android:layout_centerHorizontal="true" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Album"
+            android:id="@+id/albumView"
+            android:layout_below="@+id/intView"
+            android:layout_centerHorizontal="true" />
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/imageButton"
+            android:layout_alignTop="@+id/titelView"
+            android:layout_alignParentStart="true" />
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/imageButton2"
+            android:layout_alignTop="@+id/titelView"
+            android:layout_alignParentEnd="true" />
+
+    </RelativeLayout>
+
+    <GridLayout
+        android:layout_width="match_parent"
+        android:layout_height="121dp"
+        android:layout_weight="0.20"></GridLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="52dp">
+
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:text="Next"
+            android:id="@+id/nextBtn"
+            android:layout_weight=".5"/>
+
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:text="Preferences"
+            android:id="@+id/prefBtn"
+            android:layout_weight=".5"/>
+    </LinearLayout>
+
+</LinearLayout>
