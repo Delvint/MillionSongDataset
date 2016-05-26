@@ -48,108 +48,142 @@
         android:layout_weight="0.78">
 
         <ImageButton
-            android:src="@drawable/play"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
             android:text=""
-            android:id="@+id/playBtn"
+            android:id="@+id/play_Btn"
+            android:background="@null"
+            android:layout_marginBottom="61dp"
             android:layout_above="@+id/seekBar"
             android:layout_centerHorizontal="true"
-            android:layout_marginBottom="75dp" />
+            android:src="@drawable/play" />
 
 
         <SeekBar
+            android:id="@+id/seekBar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/seekBar"
-            android:layout_row="15"
-            android:layout_column="0"
-            android:layout_marginLeft="0dp"
+            android:progressDrawable="@drawable/millionsongdataset_scrubber_progress_horizontal_holo_dark"
+            android:thumb="@drawable/millionsongdataset_scrubber_control_selector_holo_dark"
             android:layout_alignParentBottom="true"
             android:layout_alignParentStart="true" />
-
-        <RadioButton
+        <ImageButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/radioButton"
-            android:layout_alignTop="@+id/playBtn"
-            android:layout_toStartOf="@+id/playBtn"
-            android:layout_marginTop="36dp"
-            android:layout_marginRight="50dp" />
+            android:id="@+id/skipb_Btn"
+            android:src="@drawable/skip_back"
+            android:background="@null"
+            android:layout_alignTop="@+id/skipf_Btn"
+            android:layout_toStartOf="@+id/play_Btn" />
 
-        <RadioButton
+        <ImageButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/radioButton2"
-            android:layout_toEndOf="@+id/playBtn"
-            android:layout_above="@+id/playBtn"
-            android:layout_marginLeft="50dp" />
+            android:id="@+id/repeat_Btn"
+            android:background="@null"
+            android:layout_above="@+id/play_Btn"
+            android:layout_toEndOf="@+id/play_Btn"
+            android:src="@drawable/repeat" />
 
-        <RadioButton
+        <ImageButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/radioButton3"
-            android:layout_marginLeft="50dp"
-            android:layout_alignTop="@+id/radioButton"
-            android:layout_toEndOf="@+id/playBtn" />
+            android:id="@+id/skipf_Btn"
+            android:src="@drawable/skip_forward"
+            android:background="@null"
+            android:layout_above="@+id/seekBar"
+            android:layout_alignStart="@+id/repeat_Btn" />
 
-        <RadioButton
+        <ImageButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/radioButton4"
-            android:layout_alignStart="@+id/radioButton"
-            android:layout_above="@+id/playBtn"
-            android:layout_marginRight="50dp" />
+            android:id="@+id/shuffle_Btn"
+            android:background="@null"
+            android:layout_above="@+id/play_Btn"
+            android:layout_toStartOf="@+id/play_Btn"
+            android:src="@drawable/shuffle" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="Titel"
-            android:id="@+id/titelView"
+            android:id="@+id/titel_View"
+            android:textSize="32sp"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="45dp"
-            android:textSize="32sp"/>
+            android:layout_marginTop="3dp"
+            android:maxLength="12"
+            android:ellipsize="end"
+            android:singleLine="true"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="Interpret"
-            android:id="@+id/intView"
-            android:layout_below="@+id/titelView"
-            android:layout_centerHorizontal="true" />
+            android:id="@+id/int_View"
+            android:layout_below="@+id/titel_View"
+            android:layout_centerHorizontal="true"
+            android:maxLength="12"
+            android:ellipsize="end"
+            android:singleLine="true"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="Album"
-            android:id="@+id/albumView"
-            android:layout_below="@+id/intView"
-            android:layout_centerHorizontal="true" />
+            android:id="@+id/album_View"
+            android:layout_below="@+id/int_View"
+            android:layout_centerHorizontal="true"
+            android:maxLength="8"
+            android:ellipsize="end"
+            android:singleLine="true"/>
 
         <ImageButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/imageButton"
-            android:layout_alignTop="@+id/titelView"
-            android:layout_alignParentStart="true" />
+            android:id="@+id/fav_Btn"
+            android:layout_alignTop="@+id/titel_View"
+            android:layout_alignParentStart="true"
+            android:src="@drawable/favorite"
+            android:background="@null"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="15dp" />
 
         <ImageButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/imageButton2"
-            android:layout_alignTop="@+id/titelView"
-            android:layout_alignParentEnd="true" />
+            android:id="@+id/info_Btn"
+            android:layout_alignTop="@+id/titel_View"
+            android:layout_alignParentEnd="true"
+            android:src="@drawable/info"
+            android:background="@null"
+            android:layout_marginRight="15dp"
+            android:layout_marginTop="15dp" />
 
     </RelativeLayout>
 
-    <GridLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="121dp"
-        android:layout_weight="0.20"></GridLayout>
+        android:layout_weight="0.20"
+        android:id="@+id/pref_layout">
+
+        <ListView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/song_list"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true" />
+
+        <Spinner
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/genre_spinner"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true"
+            android:visibility="gone" />
+
+    </RelativeLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -159,14 +193,14 @@
             android:layout_width="0dp"
             android:layout_height="fill_parent"
             android:text="Next"
-            android:id="@+id/nextBtn"
+            android:id="@+id/next_Btn"
             android:layout_weight=".5"/>
 
         <Button
             android:layout_width="0dp"
             android:layout_height="fill_parent"
             android:text="Preferences"
-            android:id="@+id/prefBtn"
+            android:id="@+id/pref_Btn"
             android:layout_weight=".5"/>
     </LinearLayout>
 

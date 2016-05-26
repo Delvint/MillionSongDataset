@@ -13,7 +13,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".activities.MainActivity"
+            android:name=".activities.PlayerActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait">
             <intent-filter>

@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.IBinder;
+import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import java.util.ArrayList;
@@ -15,15 +16,22 @@ import android.content.ContentResolver;
 import android.database.Cursor;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.MediaController.MediaPlayerControl;
+import android.widget.RadioButton;
+import android.widget.SeekBar;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import org.w3c.dom.Text;
 
 import at.ac.univie.a1209967.millionsongdataset.R;
 import at.ac.univie.a1209967.millionsongdataset.adapter.SongAdapter;
 import at.ac.univie.a1209967.millionsongdataset.controller.MusicController;
 import at.ac.univie.a1209967.millionsongdataset.entities.Song;
 import at.ac.univie.a1209967.millionsongdataset.service.MusicService;
-import at.ac.univie.a1209967.millionsongdataset.service.MusicService.MusicBinder;
 
 /**
  * Created by Adlbert on 04.05.2016.
@@ -31,7 +39,7 @@ import at.ac.univie.a1209967.millionsongdataset.service.MusicService.MusicBinder
  * http://code.tutsplus.com/tutorials/create-a-music-player-on-android-song-playback--mobile-22778
  */
 
-public class MainActivity extends AppCompatActivity implements MediaPlayerControl {
+public class PlayerActivity extends AppCompatActivity implements MediaPlayerControl, View.OnClickListener {
 
     private ArrayList<Song> songList;
     private ListView songView;
@@ -39,13 +47,30 @@ public class MainActivity extends AppCompatActivity implements MediaPlayerContro
     private Intent playIntent;
     private boolean musicBound=false;
     private MusicController controller;
-    private boolean paused=false, playbackPaused=false;
+    private boolean paused=false, playbackPaused=true, pref=false, shuffle=false, loop=false;
+
+    private Button nextBtn;
+    private Button prefBtn;
+    private ImageButton playBtn;
+    private ImageButton shuffleBtn;
+    private ImageButton skipfBtn;
+    private ImageButton skipbBtn;
+    private ImageButton repeatBtn;
+    private ImageButton favBtn;
+    private ImageButton infoBtn;
+    private TextView titelView;
+    private TextView interpretView;
+    private TextView albumView;
+    private SeekBar timeBar;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_player);
+
         songView = (ListView)findViewById(R.id.song_list);
+
         songList = new ArrayList<Song>();
 
         getSongList();
@@ -58,6 +83,56 @@ public class MainActivity extends AppCompatActivity implements MediaPlayerContro
 
         SongAdapter songAdt = new SongAdapter(this, songList);
         songView.setAdapter(songAdt);
+
+        timeBar = (SeekBar)findViewById(R.id.seekBar);
+        timeBar.setMax(songList.get(0).getLength());
+        timeBar.setProgress(0);
+
+        nextBtn = (Button)findViewById(R.id.next_Btn);
+        nextBtn.setOnClickListener(this);
+        prefBtn = (Button)findViewById(R.id.pref_Btn);
+        prefBtn.setOnClickListener(this);
+        playBtn = (ImageButton)findViewById(R.id.play_Btn);
+        playBtn.setImageResource(R.drawable.play);
+        playBtn.setOnClickListener(this);
+        shuffleBtn = (ImageButton)findViewById(R.id.shuffle_Btn);
+        shuffleBtn.setOnClickListener(this);
+        shuffleBtn.setImageResource(R.drawable.shuffle_not);
+        skipfBtn = (ImageButton)findViewById(R.id.skipf_Btn);
+        skipfBtn.setOnClickListener(this);
+        skipbBtn = (ImageButton)findViewById(R.id.skipb_Btn);
+        skipbBtn.setOnClickListener(this);
+        repeatBtn = (ImageButton)findViewById(R.id.repeat_Btn);
+        repeatBtn.setOnClickListener(this);
+        repeatBtn.setImageResource(R.drawable.repeat_not);
+        favBtn = (ImageButton)findViewById(R.id.fav_Btn);
+        favBtn.setOnClickListener(this);
+        infoBtn = (ImageButton)findViewById(R.id.info_Btn);
+        infoBtn.setOnClickListener(this);
+
+        titelView = (TextView)findViewById(R.id.titel_View);
+        titelView.setText(songList.get(0).getTitle());
+        interpretView = (TextView)findViewById(R.id.int_View);
+        interpretView.setText(songList.get(0).getTitle());
+        albumView = (TextView)findViewById(R.id.album_View);
+        albumView.setText(songList.get(0).getAlbum());
+
+        timeBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            int progressChanged = 0;
+
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser){
+                progressChanged = progress;
+                seekTo(progress);
+            }
+
+            public void onStartTrackingTouch(SeekBar seekBar) {
+                // TODO Auto-generated method stub
+            }
+
+            public void onStopTrackingTouch(SeekBar seekBar) {
+            }
+        });
+
 
         setController();
     }
@@ -118,7 +193,7 @@ public class MainActivity extends AppCompatActivity implements MediaPlayerContro
         musicSrv=null;
         super.onDestroy();
     }
-
+    /*
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -134,16 +209,21 @@ public class MainActivity extends AppCompatActivity implements MediaPlayerContro
         }
         return super.onOptionsItemSelected(item);
     }
+    */
 
 
     public void songPicked(View view){
         musicSrv.setSong(Integer.parseInt(view.getTag().toString()));
         musicSrv.playSong();
+        setText();
+        setTimeBar();
+        playBtn.setImageResource(R.drawable.pause);
+        paused = !paused;
         if(playbackPaused){
             setController();
             playbackPaused=false;
         }
-        controller.show(0);
+        //controller.show(0);
     }
 
     private void setController(){
@@ -170,21 +250,24 @@ public class MainActivity extends AppCompatActivity implements MediaPlayerContro
     //play next
     private void playNext(){
         musicSrv.playNext();
+        setText();
+        setTimeBar();
         if(playbackPaused){
             setController();
             playbackPaused=false;
         }
-        controller.show(0);
+        //controller.show(0);
     }
 
     //play previous
     private void playPrev(){
         musicSrv.playPrev();
+        setText();
+        setTimeBar();
         if(playbackPaused){
             setController();
             playbackPaused=false;
         }
-        controller.show(0);
     }
 
     public void getSongList() {
@@ -200,12 +283,18 @@ public class MainActivity extends AppCompatActivity implements MediaPlayerContro
                     (android.provider.MediaStore.Audio.Media._ID);
             int artistColumn = musicCursor.getColumnIndex
                     (android.provider.MediaStore.Audio.Media.ARTIST);
+            int albumColum = musicCursor.getColumnIndex
+                    (android.provider.MediaStore.Audio.Media.ALBUM);
+            int lengthColum = musicCursor.getColumnIndex
+                    (android.provider.MediaStore.Audio.Media.DURATION);
             //add songs to list
             do {
                 long thisId = musicCursor.getLong(idColumn);
+                int length = musicCursor.getInt(lengthColum);
                 String thisTitle = musicCursor.getString(titleColumn);
                 String thisArtist = musicCursor.getString(artistColumn);
-                songList.add(new Song(thisId, thisTitle, thisArtist));
+                String thisAlbum = musicCursor.getString(albumColum);
+                songList.add(new Song(thisId, thisTitle, thisArtist, thisAlbum, length));
             }
             while (musicCursor.moveToNext());
         }
@@ -272,5 +361,94 @@ public class MainActivity extends AppCompatActivity implements MediaPlayerContro
     @Override
     public int getAudioSessionId() {
         return 0;
+    }
+
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.next_Btn: {
+                if (pref) {
+                    View songView = findViewById(R.id.song_list);
+                    View genreView = findViewById(R.id.genre_spinner);
+                    songView.setVisibility(View.VISIBLE);
+                    genreView.setVisibility(View.INVISIBLE);
+                    pref = !pref;
+                }
+                break;
+            }
+
+            case R.id.pref_Btn: {
+                if (!pref) {
+                    View songView = findViewById(R.id.song_list);
+                    View genreView = findViewById(R.id.genre_spinner);
+                    songView.setVisibility(View.INVISIBLE);
+                    genreView.setVisibility(View.VISIBLE);
+                    pref = !pref;
+                }
+                break;
+            }
+
+            case R.id.play_Btn: {
+                if (paused) {
+                    musicSrv.playSong();
+                    setText();
+                    setTimeBar();
+                    playBtn.setImageResource(R.drawable.pause);
+                    paused = !paused;
+                } else {
+                    musicSrv.pausePlayer();
+                    playBtn.setImageResource(R.drawable.play);
+                    paused = !paused;
+                }
+                break;
+            }
+
+            case R.id.shuffle_Btn: {
+                musicSrv.setShuffle();
+                if (shuffle)
+                    shuffleBtn.setImageResource(R.drawable.shuffle_not);
+                else
+                    shuffleBtn.setImageResource(R.drawable.shuffle);
+                shuffle = !shuffle;
+                break;
+            }
+
+            case R.id.repeat_Btn: {
+                musicSrv.setLooping();
+                if (loop)
+                    repeatBtn.setImageResource(R.drawable.repeat_not);
+                else
+                    repeatBtn.setImageResource(R.drawable.repeat);
+                loop = !loop;
+                break;
+            }
+
+            case R.id.skipf_Btn: {
+                playNext();
+                playBtn.setImageResource(R.drawable.pause);
+                paused = !paused;
+                break;
+            }
+
+
+            case R.id.skipb_Btn: {
+                playPrev();
+                playBtn.setImageResource(R.drawable.pause);
+                paused = !paused;
+                break;
+            }
+
+        }
+    }
+
+    public void setText(){
+        titelView.setText(songList.get(musicSrv.getSongPosn()).getTitle());
+        interpretView.setText(songList.get(musicSrv.getSongPosn()).getArtist());
+        albumView.setText(songList.get(musicSrv.getSongPosn()).getAlbum());
+
+    }
+
+    public void setTimeBar(){
+        timeBar.setMax(songList.get(musicSrv.getSongPosn()).getLength());
+        timeBar.setProgress(0);
     }
 }

@@ -17,6 +17,7 @@ import android.app.PendingIntent;
 import java.util.ArrayList;
 
 import at.ac.univie.a1209967.millionsongdataset.R;
+import at.ac.univie.a1209967.millionsongdataset.activities.PlayerActivity;
 import at.ac.univie.a1209967.millionsongdataset.entities.Song;
 
 /**
@@ -35,7 +36,7 @@ public class MusicService extends Service implements
     //current position
     private int songPosn;
 
-    private boolean shuffle=false;
+    private boolean shuffle=false, loop=false;
     private Random rand;
 
     private String songTitle="";
@@ -62,7 +63,7 @@ public class MusicService extends Service implements
         //start playback
         mp.start();
 
-        Intent notIntent = new Intent(this, at.ac.univie.a1209967.millionsongdataset.activities.MainActivity.class);
+        Intent notIntent = new Intent(this, PlayerActivity.class);
         notIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         PendingIntent pendInt = PendingIntent.getActivity(this, 0,
                 notIntent, PendingIntent.FLAG_UPDATE_CURRENT);
@@ -122,6 +123,11 @@ public class MusicService extends Service implements
         else shuffle=true;
     }
 
+    public void setLooping(){
+        if(loop) loop=false;
+        else loop=true;
+    }
+
     public void setList(ArrayList<Song> theSongs){
         songs=theSongs;
     }
@@ -171,10 +177,11 @@ public class MusicService extends Service implements
             }
             songPosn=newSong;
         }
+        else if (loop){
+        }
         else{
             songPosn++;
-            if(songPosn>=songs.size()) songPosn=0;
-        }
+            if(songPosn>=songs.size()) songPosn=0;}
         playSong();
     }
 
@@ -210,6 +217,14 @@ public class MusicService extends Service implements
         stopForeground(true);
     }
 
+    public String getSongTitle() {
+        return songTitle;
+    }
+
+
+    public int getSongPosn() {
+        return songPosn;
+    }
 }
 
 

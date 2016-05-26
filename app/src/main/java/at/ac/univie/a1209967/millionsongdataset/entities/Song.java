@@ -7,16 +7,22 @@ package at.ac.univie.a1209967.millionsongdataset.entities;
  */
 public class Song {
     private long id;
+    private int length;
     private String title;
     private String artist;
+    private String album;
 
-    public Song(long songID, String songTitle, String songArtist) {
+    public Song(long songID, String songTitle, String songArtist, String songAlbum, int l) {
         id=songID;
         title=songTitle;
         artist=songArtist;
+        album=songAlbum;
+        length=l;
     }
 
     public long getID(){return id;}
     public String getTitle(){return title;}
     public String getArtist(){return artist;}
+    public String getAlbum(){return album;}
+    public int getLength(){return length;}
 }
