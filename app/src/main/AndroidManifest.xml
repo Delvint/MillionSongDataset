@@ -31,8 +31,7 @@
 
         <activity
             android:name=".activities.SearchActivity"
-            android:label="@string/title_activity_search"
->
+            android:label="@string/title_activity_search">
             <intent-filter>
                 <action android:name="at.ac.univie.a1209967.millionsongdataset.activities.SearchActivity" />
 
@@ -46,7 +45,10 @@
         <activity
             android:name=".activities.SearchResultActivity"
             android:label="@string/title_activity_search_result"
-            android:theme="@style/AppTheme"></activity>
+            android:theme="@style/AppTheme" />
+        <activity android:name=".activities.FavouritesActivity" />
+        <activity android:name=".activities.SuggestionsActivity" />
+        <activity android:name=".activities.UsermenuActivity"></activity>
     </application>
 
 </manifest>

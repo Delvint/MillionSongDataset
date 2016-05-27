@@ -41,6 +41,14 @@ public class HistoryActivity extends AppCompatActivity {
             SongAdapter histAdt = new SongAdapter(this, historyList);
             historyView.setAdapter(histAdt);
         }
+
+        backBtn = (Button) findViewById(R.id.backBtn);
+        backBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
     }
 
 }

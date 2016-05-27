@@ -47,6 +47,13 @@ public class SearchResultActivity extends AppCompatActivity {
         SongAdapter resultAdt = new SongAdapter(this, resultList);
         resultView.setAdapter(resultAdt);
 
+        backBtn = (Button) findViewById(R.id.backBtn);
+        backBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
     }
 
 }

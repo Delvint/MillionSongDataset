@@ -78,6 +78,7 @@ public class PlayerActivity extends AppCompatActivity implements MediaPlayerCont
     private ImageButton repeatBtn;
     private Button historyBtn;
     private Button searchBtn;
+    private Button favMenuBtn;
     private Button sugBtn;
     private Button menuBtn;
     private ImageButton favBtn;
@@ -114,7 +115,7 @@ public class PlayerActivity extends AppCompatActivity implements MediaPlayerCont
 
 
 
-        genreList =new ArrayList<>(Arrays.asList("acoustic", "afrobeat", "alt-rock", "alternative", "ambient", "anime", "black-metal", "bluegrass", "blues", "bossanova", "brazil", "breakbeat", "british", "cantopop", "chicago-house", "children", "chill", "classical", "club", "comedy", "country", "dance", "dancehall", "death-metal", "deep-house", "detroit-techno", "disco", "disney", "drum-and-bass", "dub", "dubstep", "edm", "electro", "electronic", "emo", "folk", "forro", "french", "funk", "garage", "german", "gospel", "goth", "grindcore", "groove", "grunge", "guitar", "happy", "hard-rock", "hardcore", "hardstyle", "heavy-metal", "hip-hop", "holidays", "honky-tonk", "house", "idm", "indian", "indie", "indie-pop", "industrial", "iranian", "j-dance", "j-idol", "j-pop", "j-rock", "jazz", "k-pop", "kids", "latin", "latino", "malay", "mandopop", "metal", "metal-misc", "metalcore", "minimal-techno", "movies", "mpb", "new-age", "new-release", "opera", "pagode", "party", "philippines-opm", "piano", "pop", "pop-film", "post-dubstep", "power-pop", "progressive-house", "psych-rock", "punk", "punk-rock", "r-n-b", "rainy-day", "reggae", "reggaeton", "road-trip", "rock", "rock-n-roll", "rockabilly", "romance", "sad", "salsa", "samba", "sertanejo", "show-tunes", "singer-songwriter", "ska", "sleep", "songwriter", "soul", "soundtracks", "spanish", "study", "summer", "swedish", "synth-pop", "tango", "techno", "trance", "trip-hop", "turkish", "work-out", "world-music"));
+        genreList = new ArrayList<>(Arrays.asList("acoustic", "afrobeat", "alt-rock", "alternative", "ambient", "anime", "black-metal", "bluegrass", "blues", "bossanova", "brazil", "breakbeat", "british", "cantopop", "chicago-house", "children", "chill", "classical", "club", "comedy", "country", "dance", "dancehall", "death-metal", "deep-house", "detroit-techno", "disco", "disney", "drum-and-bass", "dub", "dubstep", "edm", "electro", "electronic", "emo", "folk", "forro", "french", "funk", "garage", "german", "gospel", "goth", "grindcore", "groove", "grunge", "guitar", "happy", "hard-rock", "hardcore", "hardstyle", "heavy-metal", "hip-hop", "holidays", "honky-tonk", "house", "idm", "indian", "indie", "indie-pop", "industrial", "iranian", "j-dance", "j-idol", "j-pop", "j-rock", "jazz", "k-pop", "kids", "latin", "latino", "malay", "mandopop", "metal", "metal-misc", "metalcore", "minimal-techno", "movies", "mpb", "new-age", "new-release", "opera", "pagode", "party", "philippines-opm", "piano", "pop", "pop-film", "post-dubstep", "power-pop", "progressive-house", "psych-rock", "punk", "punk-rock", "r-n-b", "rainy-day", "reggae", "reggaeton", "road-trip", "rock", "rock-n-roll", "rockabilly", "romance", "sad", "salsa", "samba", "sertanejo", "show-tunes", "singer-songwriter", "ska", "sleep", "songwriter", "soul", "soundtracks", "spanish", "study", "summer", "swedish", "synth-pop", "tango", "techno", "trance", "trip-hop", "turkish", "work-out", "world-music"));
         getSongList();
 
         Collections.sort(songList, new Comparator<Song>(){
@@ -173,6 +174,37 @@ public class PlayerActivity extends AppCompatActivity implements MediaPlayerCont
                 Intent searchIntent = new Intent(getApplicationContext(), SearchActivity.class);
                 searchIntent.putExtra(EXTRA_SONGLIST, songList);
                 startActivity(searchIntent);
+            }
+        });
+
+
+        favMenuBtn = (Button) findViewById(R.id.favBtn);
+        favMenuBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent favIntent = new Intent(getApplicationContext(), FavouritesActivity.class);
+                favIntent.putExtra(EXTRA_SONGLIST, songList);
+                startActivity(favIntent);
+            }
+        });
+
+        sugBtn = (Button) findViewById(R.id.sugBtn);
+        sugBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent sugIntent = new Intent(getApplicationContext(), SuggestionsActivity.class);
+                sugIntent.putExtra(EXTRA_SONGLIST, songList);
+                sugIntent.putExtra(EXTRA_HIST, historyList);
+                startActivity(sugIntent);
+            }
+        });
+
+        menuBtn = (Button) findViewById(R.id.menuBtn);
+        menuBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent menuIntent = new Intent(getApplicationContext(), UsermenuActivity.class);
+                startActivity(menuIntent);
             }
         });
 
@@ -282,6 +314,10 @@ public class PlayerActivity extends AppCompatActivity implements MediaPlayerCont
         if(playbackPaused){
             setController();
             playbackPaused=false;
+        }
+
+        if(songList.get(musicSrv.getSongPosn())!=null && !(historyList.contains(songList.get(musicSrv.getSongPosn())))) {
+            historyList.add(songList.get(musicSrv.getSongPosn()));
         }
         //controller.show(0);
     }

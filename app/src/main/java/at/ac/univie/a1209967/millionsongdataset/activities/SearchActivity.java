@@ -26,6 +26,8 @@ public class SearchActivity extends AppCompatActivity {
     TextView resultText;
     EditText searchText;
     private ArrayList<Song> songList;
+    Button backBtn;
+
 
     public final static String EXTRA_SEARCHSTR="at.ac.univie.a1209967.millionsongdataset.SEARCHSTR";
     public final static String EXTRA_SONGLIST="at.ac.univie.a1209967.millionsongdataset.SONGLIST";
@@ -53,6 +55,14 @@ public class SearchActivity extends AppCompatActivity {
                 searchRsltIntent.putExtra(EXTRA_SEARCHSTR, searchString);
                 searchRsltIntent.putExtra(EXTRA_SONGLIST, songList);
                 startActivity(searchRsltIntent);
+            }
+        });
+
+        backBtn = (Button) findViewById(R.id.backBtn);
+        backBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
             }
         });
     }
