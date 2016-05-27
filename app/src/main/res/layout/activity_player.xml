@@ -144,7 +144,7 @@
             android:id="@+id/fav_Btn"
             android:layout_alignTop="@+id/titel_View"
             android:layout_alignParentStart="true"
-            android:src="@drawable/favorite"
+            android:src="@drawable/favorite_not"
             android:background="@null"
             android:layout_marginLeft="15dp"
             android:layout_marginTop="15dp" />
@@ -159,6 +159,25 @@
             android:background="@null"
             android:layout_marginRight="15dp"
             android:layout_marginTop="15dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="0:00"
+            android:id="@+id/zero_Time"
+            android:layout_above="@+id/seekBar"
+            android:layout_alignParentStart="true"
+            android:layout_marginLeft="3dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:id="@+id/max_Time"
+            android:layout_above="@+id/seekBar"
+            android:layout_alignParentEnd="true"
+            android:layout_marginRight="3dp" />
 
     </RelativeLayout>
 
@@ -175,13 +194,10 @@
             android:layout_centerVertical="true"
             android:layout_centerHorizontal="true" />
 
-        <Spinner
+        <ListView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/genre_spinner"
-            android:layout_centerVertical="true"
-            android:layout_centerHorizontal="true"
-            android:visibility="gone" />
+            android:id="@+id/genre_list" />
 
     </RelativeLayout>
 

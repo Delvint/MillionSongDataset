@@ -11,13 +11,17 @@ public class Song {
     private String title;
     private String artist;
     private String album;
+    private String genre;
+    private boolean fav;
 
-    public Song(long songID, String songTitle, String songArtist, String songAlbum, int l) {
+    public Song(long songID, String songTitle, String songArtist, String songAlbum, int l, String g) {
         id=songID;
         title=songTitle;
         artist=songArtist;
         album=songAlbum;
         length=l;
+        genre = g;
+        fav = false;
     }
 
     public long getID(){return id;}
@@ -25,4 +29,7 @@ public class Song {
     public String getArtist(){return artist;}
     public String getAlbum(){return album;}
     public int getLength(){return length;}
+    public String getGenre(){return genre;}
+    public void setFav(boolean f){ fav = f;}
+    public boolean getFav() {return fav;}
 }
