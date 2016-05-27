@@ -1,11 +1,13 @@
 package at.ac.univie.a1209967.millionsongdataset.entities;
 
+import java.io.Serializable;
+
 /**
  * Created by Adlbert on 02.05.2016.
  * Diese Klasse wurde aus dem Tutorium zur Erstellung eines Musikplayers entnommen.
  * http://code.tutsplus.com/tutorials/create-a-music-player-on-android-project-setup--mobile-22764
  */
-public class Song {
+public class Song implements Serializable {
     private long id;
     private int length;
     private String title;

@@ -10,6 +10,8 @@ import android.os.Binder;
 import android.os.IBinder;
 import android.os.PowerManager;
 import android.util.Log;
+
+import java.io.Serializable;
 import java.util.Random;
 import android.app.Notification;
 import android.app.PendingIntent;
@@ -116,6 +118,10 @@ public class MusicService extends Service implements
 
     public void setSong(int songIndex){
         songPosn=songIndex;
+    }
+
+    public Song getCurrentSong(){
+        return songs.get(this.getSongPosn());
     }
 
     public void setShuffle(){

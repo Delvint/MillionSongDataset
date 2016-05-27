@@ -59,6 +59,7 @@ public class PlayerActivity extends AppCompatActivity implements MediaPlayerCont
     private ArrayList<String> genreList;
     private GenreAdapter genreAdt;
     private SongAdapter songAdt;
+    public ArrayList<Song> historyList;
     private ListView songView;
     private ListView genreView;
     private MusicService musicSrv;
@@ -75,6 +76,10 @@ public class PlayerActivity extends AppCompatActivity implements MediaPlayerCont
     private ImageButton skipfBtn;
     private ImageButton skipbBtn;
     private ImageButton repeatBtn;
+    private Button historyBtn;
+    private Button searchBtn;
+    private Button sugBtn;
+    private Button menuBtn;
     private ImageButton favBtn;
     private ImageButton infoBtn;
     private TextView titelView;
@@ -86,6 +91,12 @@ public class PlayerActivity extends AppCompatActivity implements MediaPlayerCont
     private static final String CLIENT_ID = "c57b7c1903b146ae93e23873ab5abf3f";
     private static final String REDIRECT_URI = "MillionSongDataset-a1209967://callback";
     private static final int REQUEST_CODE = 1337;
+
+    public final static String EXTRA_HIST = "at.ac.univie.a1209967.millionsongdataset.HISTLIST";
+    public final static String EXTRA_SONGLIST="at.ac.univie.a1209967.millionsongdataset.SONGLIST";
+
+
+
 
 
     @Override
@@ -99,6 +110,7 @@ public class PlayerActivity extends AppCompatActivity implements MediaPlayerCont
         genreView = (ListView)findViewById(R.id.genre_list);
 
         songList = new ArrayList<Song>();
+        historyList = new ArrayList<Song>();
 
 
 
@@ -140,6 +152,30 @@ public class PlayerActivity extends AppCompatActivity implements MediaPlayerCont
         repeatBtn = (ImageButton)findViewById(R.id.repeat_Btn);
         repeatBtn.setOnClickListener(this);
         repeatBtn.setImageResource(R.drawable.repeat_not);
+
+        historyBtn=(Button) findViewById(R.id.historyBtn);
+        historyBtn.setOnClickListener(new View.OnClickListener(){
+
+            @Override
+            public void onClick(View view) {
+                Intent historyIntent = new Intent(getApplicationContext(), HistoryActivity.class);
+                if(historyList!=null) {
+                    historyIntent.putExtra(EXTRA_HIST, historyList);
+                }
+                startActivity(historyIntent);
+            }
+        });
+
+        searchBtn=(Button) findViewById(R.id.searchBtn);
+        searchBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent searchIntent = new Intent(getApplicationContext(), SearchActivity.class);
+                searchIntent.putExtra(EXTRA_SONGLIST, songList);
+                startActivity(searchIntent);
+            }
+        });
+
         favBtn = (ImageButton)findViewById(R.id.fav_Btn);
         favBtn.setOnClickListener(this);
         infoBtn = (ImageButton)findViewById(R.id.info_Btn);
@@ -203,6 +239,8 @@ public class PlayerActivity extends AppCompatActivity implements MediaPlayerCont
             bindService(playIntent, musicConnection, Context.BIND_AUTO_CREATE);
             startService(playIntent);
         }
+
+
     }
 
     @Override
@@ -472,6 +510,26 @@ public class PlayerActivity extends AppCompatActivity implements MediaPlayerCont
 
             case R.id.play_Btn: {
                 play();
+                /*added*/
+                if (paused) {
+                    musicSrv.playSong();
+                    setText();
+                    setTimeBar();
+                    playBtn.setImageResource(R.drawable.pause);
+                    paused = !paused;
+                } else {
+                    musicSrv.pausePlayer();
+                    playBtn.setImageResource(R.drawable.play);
+                    paused = !paused;
+                }
+
+                //adding played song to history
+
+
+                if(songList.get(musicSrv.getSongPosn())!=null && !(historyList.contains(songList.get(musicSrv.getSongPosn())))) {
+                    historyList.add(songList.get(musicSrv.getSongPosn()));
+                }
+
                 break;
             }
 
@@ -540,5 +598,8 @@ public class PlayerActivity extends AppCompatActivity implements MediaPlayerCont
         timeBar.setMax(songList.get(musicSrv.getSongPosn()).getLength());
         timeBar.setProgress(0);
     }
+
+
+
 
 }
