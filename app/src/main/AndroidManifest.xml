@@ -32,7 +32,7 @@
         <activity
             android:name=".activities.SearchActivity"
             android:label="@string/title_activity_search"
-            android:theme="@style/AppTheme.NoActionBar">
+>
             <intent-filter>
                 <action android:name="at.ac.univie.a1209967.millionsongdataset.activities.SearchActivity" />
 
