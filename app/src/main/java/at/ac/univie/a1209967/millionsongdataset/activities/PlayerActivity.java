@@ -466,7 +466,6 @@ public class PlayerActivity extends AppCompatActivity implements MediaPlayerCont
                     songView.setVisibility(View.INVISIBLE);
                     genreView.setVisibility(View.VISIBLE);
                     pref = !pref;
-
                 }
                 break;
             }
