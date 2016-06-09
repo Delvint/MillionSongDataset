@@ -78,7 +78,6 @@ public class PlayerActivity extends AppCompatActivity implements MediaPlayerCont
     private ImageButton repeatBtn;
     private Button historyBtn;
     private Button searchBtn;
-    private Button favMenuBtn;
     private Button sugBtn;
     private Button menuBtn;
     private ImageButton favBtn;
@@ -115,7 +114,7 @@ public class PlayerActivity extends AppCompatActivity implements MediaPlayerCont
 
 
 
-        genreList = new ArrayList<>(Arrays.asList("acoustic", "afrobeat", "alt-rock", "alternative", "ambient", "anime", "black-metal", "bluegrass", "blues", "bossanova", "brazil", "breakbeat", "british", "cantopop", "chicago-house", "children", "chill", "classical", "club", "comedy", "country", "dance", "dancehall", "death-metal", "deep-house", "detroit-techno", "disco", "disney", "drum-and-bass", "dub", "dubstep", "edm", "electro", "electronic", "emo", "folk", "forro", "french", "funk", "garage", "german", "gospel", "goth", "grindcore", "groove", "grunge", "guitar", "happy", "hard-rock", "hardcore", "hardstyle", "heavy-metal", "hip-hop", "holidays", "honky-tonk", "house", "idm", "indian", "indie", "indie-pop", "industrial", "iranian", "j-dance", "j-idol", "j-pop", "j-rock", "jazz", "k-pop", "kids", "latin", "latino", "malay", "mandopop", "metal", "metal-misc", "metalcore", "minimal-techno", "movies", "mpb", "new-age", "new-release", "opera", "pagode", "party", "philippines-opm", "piano", "pop", "pop-film", "post-dubstep", "power-pop", "progressive-house", "psych-rock", "punk", "punk-rock", "r-n-b", "rainy-day", "reggae", "reggaeton", "road-trip", "rock", "rock-n-roll", "rockabilly", "romance", "sad", "salsa", "samba", "sertanejo", "show-tunes", "singer-songwriter", "ska", "sleep", "songwriter", "soul", "soundtracks", "spanish", "study", "summer", "swedish", "synth-pop", "tango", "techno", "trance", "trip-hop", "turkish", "work-out", "world-music"));
+        genreList =new ArrayList<>(Arrays.asList("acoustic", "afrobeat", "alt-rock", "alternative", "ambient", "anime", "black-metal", "bluegrass", "blues", "bossanova", "brazil", "breakbeat", "british", "cantopop", "chicago-house", "children", "chill", "classical", "club", "comedy", "country", "dance", "dancehall", "death-metal", "deep-house", "detroit-techno", "disco", "disney", "drum-and-bass", "dub", "dubstep", "edm", "electro", "electronic", "emo", "folk", "forro", "french", "funk", "garage", "german", "gospel", "goth", "grindcore", "groove", "grunge", "guitar", "happy", "hard-rock", "hardcore", "hardstyle", "heavy-metal", "hip-hop", "holidays", "honky-tonk", "house", "idm", "indian", "indie", "indie-pop", "industrial", "iranian", "j-dance", "j-idol", "j-pop", "j-rock", "jazz", "k-pop", "kids", "latin", "latino", "malay", "mandopop", "metal", "metal-misc", "metalcore", "minimal-techno", "movies", "mpb", "new-age", "new-release", "opera", "pagode", "party", "philippines-opm", "piano", "pop", "pop-film", "post-dubstep", "power-pop", "progressive-house", "psych-rock", "punk", "punk-rock", "r-n-b", "rainy-day", "reggae", "reggaeton", "road-trip", "rock", "rock-n-roll", "rockabilly", "romance", "sad", "salsa", "samba", "sertanejo", "show-tunes", "singer-songwriter", "ska", "sleep", "songwriter", "soul", "soundtracks", "spanish", "study", "summer", "swedish", "synth-pop", "tango", "techno", "trance", "trip-hop", "turkish", "work-out", "world-music"));
         getSongList();
 
         Collections.sort(songList, new Comparator<Song>(){
@@ -137,24 +136,45 @@ public class PlayerActivity extends AppCompatActivity implements MediaPlayerCont
         timeBar.setProgress(0);
 
         nextBtn = (Button)findViewById(R.id.next_Btn);
-        nextBtn.setOnClickListener(this);
         prefBtn = (Button)findViewById(R.id.pref_Btn);
-        prefBtn.setOnClickListener(this);
         playBtn = (ImageButton)findViewById(R.id.play_Btn);
-        playBtn.setImageResource(R.drawable.play);
-        playBtn.setOnClickListener(this);
         shuffleBtn = (ImageButton)findViewById(R.id.shuffle_Btn);
-        shuffleBtn.setOnClickListener(this);
-        shuffleBtn.setImageResource(R.drawable.shuffle_not);
         skipfBtn = (ImageButton)findViewById(R.id.skipf_Btn);
-        skipfBtn.setOnClickListener(this);
         skipbBtn = (ImageButton)findViewById(R.id.skipb_Btn);
-        skipbBtn.setOnClickListener(this);
+        historyBtn=(Button) findViewById(R.id.historyBtn);
+        searchBtn=(Button) findViewById(R.id.searchBtn);
+        favBtn = (ImageButton)findViewById(R.id.fav_Btn);
+        infoBtn = (ImageButton)findViewById(R.id.info_Btn);
+
+        titelView = (TextView)findViewById(R.id.titel_View);
+        interpretView = (TextView)findViewById(R.id.int_View);
+        albumView = (TextView)findViewById(R.id.album_View);
+        maxTimeView = (TextView)findViewById(R.id.max_Time);
+
+        shuffleBtn.setImageResource(R.drawable.shuffle_not);
         repeatBtn = (ImageButton)findViewById(R.id.repeat_Btn);
-        repeatBtn.setOnClickListener(this);
+        playBtn.setImageResource(R.drawable.play);
         repeatBtn.setImageResource(R.drawable.repeat_not);
 
-        historyBtn=(Button) findViewById(R.id.historyBtn);
+        favBtn.setOnClickListener(this);
+        infoBtn.setOnClickListener(this);
+        nextBtn.setOnClickListener(this);
+        prefBtn.setOnClickListener(this);
+        playBtn.setOnClickListener(this);
+        shuffleBtn.setOnClickListener(this);
+        repeatBtn.setOnClickListener(this);
+        skipfBtn.setOnClickListener(this);
+        skipbBtn.setOnClickListener(this);
+
+        titelView.setText(songList.get(1).getTitle());
+        interpretView.setText(songList.get(1).getTitle());
+        albumView.setText(songList.get(1).getAlbum());
+        maxTimeView.setText(String.format("%02d : %02d ",
+                TimeUnit.MILLISECONDS.toMinutes(songList.get(1).getLength()),
+                TimeUnit.MILLISECONDS.toSeconds(songList.get(1).getLength()) -
+                        TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(songList.get(1).getLength()))
+        ));
+
         historyBtn.setOnClickListener(new View.OnClickListener(){
 
             @Override
@@ -167,7 +187,6 @@ public class PlayerActivity extends AppCompatActivity implements MediaPlayerCont
             }
         });
 
-        searchBtn=(Button) findViewById(R.id.searchBtn);
         searchBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -178,53 +197,8 @@ public class PlayerActivity extends AppCompatActivity implements MediaPlayerCont
         });
 
 
-        favMenuBtn = (Button) findViewById(R.id.favBtn);
-        favMenuBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent favIntent = new Intent(getApplicationContext(), FavouritesActivity.class);
-                favIntent.putExtra(EXTRA_SONGLIST, songList);
-                startActivity(favIntent);
-            }
-        });
 
-        sugBtn = (Button) findViewById(R.id.sugBtn);
-        sugBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent sugIntent = new Intent(getApplicationContext(), SuggestionsActivity.class);
-                sugIntent.putExtra(EXTRA_SONGLIST, songList);
-                sugIntent.putExtra(EXTRA_HIST, historyList);
-                startActivity(sugIntent);
-            }
-        });
 
-        menuBtn = (Button) findViewById(R.id.menuBtn);
-        menuBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent menuIntent = new Intent(getApplicationContext(), UsermenuActivity.class);
-                startActivity(menuIntent);
-            }
-        });
-
-        favBtn = (ImageButton)findViewById(R.id.fav_Btn);
-        favBtn.setOnClickListener(this);
-        infoBtn = (ImageButton)findViewById(R.id.info_Btn);
-        infoBtn.setOnClickListener(this);
-
-        titelView = (TextView)findViewById(R.id.titel_View);
-        titelView.setText(songList.get(1).getTitle());
-        interpretView = (TextView)findViewById(R.id.int_View);
-        interpretView.setText(songList.get(1).getTitle());
-        albumView = (TextView)findViewById(R.id.album_View);
-        albumView.setText(songList.get(1).getAlbum());
-        maxTimeView = (TextView)findViewById(R.id.max_Time);
-        maxTimeView.setText(String.format("%02d : %02d ",
-                TimeUnit.MILLISECONDS.toMinutes(songList.get(1).getLength()),
-                TimeUnit.MILLISECONDS.toSeconds(songList.get(1).getLength()) -
-                        TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(songList.get(1).getLength()))
-        ));
         timeBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             int progressChanged = 0;
 
@@ -243,6 +217,91 @@ public class PlayerActivity extends AppCompatActivity implements MediaPlayerCont
 
         setController();
     }
+
+     public void onClick(View v) {
+         switch (v.getId()) {
+             case R.id.next_Btn: {
+                 if (pref) {
+                     View songView = findViewById(R.id.song_list);
+                     View genreView = findViewById(R.id.genre_list);
+                     songView.setVisibility(View.VISIBLE);
+                     genreView.setVisibility(View.INVISIBLE);
+                     pref = !pref;
+                 }
+                 break;
+             }
+
+             case R.id.pref_Btn: {
+                 if (!pref) {
+                     View songView = findViewById(R.id.song_list);
+                     View genreView = findViewById(R.id.genre_list);
+                     songView.setVisibility(View.INVISIBLE);
+                     genreView.setVisibility(View.VISIBLE);
+                     pref = !pref;
+                 }
+                 break;
+             }
+
+             case R.id.play_Btn: {
+                 play();
+                /*added*/
+                 if (paused) {
+                     musicSrv.playSong();
+                     setText();
+                     setTimeBar();
+                     playBtn.setImageResource(R.drawable.pause);
+                     paused = !paused;
+                 } else {
+                     musicSrv.pausePlayer();
+                     playBtn.setImageResource(R.drawable.play);
+                     paused = !paused;
+                 }
+
+                 //adding played song to history
+
+
+                 if(songList.get(musicSrv.getSongPosn())!=null && !(historyList.contains(songList.get(musicSrv.getSongPosn())))) {
+                     historyList.add(songList.get(musicSrv.getSongPosn()));
+                 }
+
+                 break;
+             }
+
+             case R.id.shuffle_Btn: {
+                 setShuffle();
+                 break;
+             }
+
+             case R.id.repeat_Btn: {
+                 setLooping();
+                 break;
+             }
+
+             case R.id.skipf_Btn: {
+                 playNext();
+                 break;
+             }
+
+
+             case R.id.skipb_Btn: {
+                 playPrev();
+                 break;
+             }
+
+             case R.id.fav_Btn:{
+                 if (!songList.get(musicSrv.getSongPosn()).getFav()) {
+                     favBtn.setImageResource(R.drawable.favorite);
+                     songList.get(musicSrv.getSongPosn()).setFav(true);
+                 }
+                 else {
+                     favBtn.setImageResource(R.drawable.favorite_not);
+                     songList.get(musicSrv.getSongPosn()).setFav(false);
+                 }
+             }
+
+
+         }
+     }
 
     //connect to the service
     private ServiceConnection musicConnection = new ServiceConnection(){
@@ -314,10 +373,6 @@ public class PlayerActivity extends AppCompatActivity implements MediaPlayerCont
         if(playbackPaused){
             setController();
             playbackPaused=false;
-        }
-
-        if(songList.get(musicSrv.getSongPosn())!=null && !(historyList.contains(songList.get(musicSrv.getSongPosn())))) {
-            historyList.add(songList.get(musicSrv.getSongPosn()));
         }
         //controller.show(0);
     }
@@ -520,90 +575,6 @@ public class PlayerActivity extends AppCompatActivity implements MediaPlayerCont
         return 0;
     }
 
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.next_Btn: {
-                if (pref) {
-                    View songView = findViewById(R.id.song_list);
-                    View genreView = findViewById(R.id.genre_list);
-                    songView.setVisibility(View.VISIBLE);
-                    genreView.setVisibility(View.INVISIBLE);
-                    pref = !pref;
-                }
-                break;
-            }
-
-            case R.id.pref_Btn: {
-                if (!pref) {
-                    View songView = findViewById(R.id.song_list);
-                    View genreView = findViewById(R.id.genre_list);
-                    songView.setVisibility(View.INVISIBLE);
-                    genreView.setVisibility(View.VISIBLE);
-                    pref = !pref;
-                }
-                break;
-            }
-
-            case R.id.play_Btn: {
-                play();
-                /*added*/
-                if (paused) {
-                    musicSrv.playSong();
-                    setText();
-                    setTimeBar();
-                    playBtn.setImageResource(R.drawable.pause);
-                    paused = !paused;
-                } else {
-                    musicSrv.pausePlayer();
-                    playBtn.setImageResource(R.drawable.play);
-                    paused = !paused;
-                }
-
-                //adding played song to history
-
-
-                if(songList.get(musicSrv.getSongPosn())!=null && !(historyList.contains(songList.get(musicSrv.getSongPosn())))) {
-                    historyList.add(songList.get(musicSrv.getSongPosn()));
-                }
-
-                break;
-            }
-
-            case R.id.shuffle_Btn: {
-                setShuffle();
-                break;
-            }
-
-            case R.id.repeat_Btn: {
-                setLooping();
-                break;
-            }
-
-            case R.id.skipf_Btn: {
-                playNext();
-                break;
-            }
-
-
-            case R.id.skipb_Btn: {
-                playPrev();
-                break;
-            }
-
-            case R.id.fav_Btn:{
-                if (!songList.get(musicSrv.getSongPosn()).getFav()) {
-                    favBtn.setImageResource(R.drawable.favorite);
-                    songList.get(musicSrv.getSongPosn()).setFav(true);
-                }
-                else {
-                    favBtn.setImageResource(R.drawable.favorite_not);
-                    songList.get(musicSrv.getSongPosn()).setFav(false);
-                }
-            }
-
-
-        }
-    }
 
      @Override
      public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
