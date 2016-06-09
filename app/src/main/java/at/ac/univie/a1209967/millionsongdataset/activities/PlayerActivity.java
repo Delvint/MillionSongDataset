@@ -4,11 +4,14 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.media.Image;
 import android.os.IBinder;
 import android.provider.MediaStore;
 import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -60,6 +63,7 @@ public class PlayerActivity extends AppCompatActivity implements MediaPlayerCont
     private GenreAdapter genreAdt;
     private SongAdapter songAdt;
     public ArrayList<Song> historyList;
+    public ArrayList<Song> favList;
     private ListView songView;
     private ListView genreView;
     private MusicService musicSrv;
@@ -78,8 +82,9 @@ public class PlayerActivity extends AppCompatActivity implements MediaPlayerCont
     private ImageButton repeatBtn;
     private Button historyBtn;
     private Button searchBtn;
-    private Button sugBtn;
-    private Button menuBtn;
+    private Button favouritBtn;
+    private Button offerBtn;
+    private ImageButton menuBtn;
     private ImageButton favBtn;
     private ImageButton infoBtn;
     private TextView titelView;
@@ -111,6 +116,7 @@ public class PlayerActivity extends AppCompatActivity implements MediaPlayerCont
 
         songList = new ArrayList<Song>();
         historyList = new ArrayList<Song>();
+        favList = new ArrayList<Song>();
 
 
 
@@ -143,8 +149,11 @@ public class PlayerActivity extends AppCompatActivity implements MediaPlayerCont
         skipbBtn = (ImageButton)findViewById(R.id.skipb_Btn);
         historyBtn=(Button) findViewById(R.id.historyBtn);
         searchBtn=(Button) findViewById(R.id.searchBtn);
+        favouritBtn = (Button) findViewById(R.id.favBtn);
+        offerBtn = (Button) findViewById(R.id.sugBtn);
         favBtn = (ImageButton)findViewById(R.id.fav_Btn);
         infoBtn = (ImageButton)findViewById(R.id.info_Btn);
+        menuBtn =(ImageButton)findViewById(R.id.menuBtn);
 
         titelView = (TextView)findViewById(R.id.titel_View);
         interpretView = (TextView)findViewById(R.id.int_View);
@@ -195,6 +204,36 @@ public class PlayerActivity extends AppCompatActivity implements MediaPlayerCont
                 startActivity(searchIntent);
             }
         });
+
+        favouritBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent favIntent = new Intent(getApplicationContext(), FavouritesActivity.class);
+                favIntent.putExtra(EXTRA_SONGLIST, favList);
+                startActivity(favIntent);
+            }
+        });
+
+
+        offerBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent sugIntent = new Intent(getApplicationContext(), SuggestionsActivity.class);
+                sugIntent.putExtra(EXTRA_SONGLIST, songList);
+                sugIntent.putExtra(EXTRA_HIST, historyList);
+                startActivity(sugIntent);
+            }
+        });
+
+
+        menuBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent menuIntent = new Intent(getApplicationContext(), UsermenuActivity.class);
+                startActivity(menuIntent);
+            }
+        });
+
 
 
 
@@ -292,10 +331,12 @@ public class PlayerActivity extends AppCompatActivity implements MediaPlayerCont
                  if (!songList.get(musicSrv.getSongPosn()).getFav()) {
                      favBtn.setImageResource(R.drawable.favorite);
                      songList.get(musicSrv.getSongPosn()).setFav(true);
+                     favList.add( musicSrv.getSongPosn(), songList.get(musicSrv.getSongPosn()));
                  }
                  else {
                      favBtn.setImageResource(R.drawable.favorite_not);
                      songList.get(musicSrv.getSongPosn()).setFav(false);
+                     favList.remove(musicSrv.getSongPosn());
                  }
              }
 

@@ -13,7 +13,7 @@
             android:layout_height="fill_parent"
             android:text="History"
             android:id="@+id/historyBtn"
-            android:layout_weight=".2"
+            android:layout_weight=".225"
             />
 
         <Button
@@ -21,26 +21,27 @@
             android:layout_height="fill_parent"
             android:text="Search"
             android:id="@+id/searchBtn"
-            android:layout_weight=".2"
+            android:layout_weight=".225"
           />
         <Button
             android:layout_width="0dp"
             android:layout_height="fill_parent"
-            android:text="Favourites"
+            android:text="Favs"
             android:id="@+id/favBtn"
-            android:layout_weight=".2"/>
+            android:layout_weight=".225"/>
         <Button
             android:layout_width="0dp"
             android:layout_height="fill_parent"
-            android:text="Suggestions"
+            android:text="Offer"
             android:id="@+id/sugBtn"
-            android:layout_weight=".2"/>
-        <Button
+            android:layout_weight=".225"/>
+        <ImageButton
             android:layout_width="0dp"
             android:layout_height="fill_parent"
             android:text="Menu"
             android:id="@+id/menuBtn"
-            android:layout_weight=".2"/>
+            android:layout_weight=".1"
+            android:src="@drawable/menu_dots"/>
 
     </LinearLayout>
 
@@ -146,7 +147,7 @@
             android:id="@+id/fav_Btn"
             android:layout_alignTop="@+id/titel_View"
             android:layout_alignParentStart="true"
-            android:src="@drawable/favorite"
+            android:src="@drawable/favorite_not"
             android:background="@null"
             android:layout_marginLeft="15dp"
             android:layout_marginTop="15dp" />
