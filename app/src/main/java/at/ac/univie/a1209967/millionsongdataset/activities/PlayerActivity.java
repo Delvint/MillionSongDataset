@@ -225,6 +225,14 @@ public class PlayerActivity extends AppCompatActivity implements MediaPlayerCont
             }
         });
 
+        infoBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent infoIntent = new Intent(getApplicationContext(), InfoActivity.class);
+                startActivity(infoIntent);
+            }
+        });
+
 
         menuBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -326,6 +334,7 @@ public class PlayerActivity extends AppCompatActivity implements MediaPlayerCont
                  playPrev();
                  break;
              }
+
 
              case R.id.fav_Btn:{
                  if (!songList.get(musicSrv.getSongPosn()).getFav()) {
