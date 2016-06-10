@@ -105,13 +105,14 @@ public class PlayerActivity extends AppCompatActivity implements MediaPlayerCont
     private static final int REQUEST_CODE = 1337;
 
     public final static String EXTRA_HIST = "at.ac.univie.a1209967.millionsongdataset.HISTLIST";
-    public final static String EXTRA_SONGLIST="at.ac.univie.a1209967.millionsongdataset.SONGLIST";
+    public final static String EXTRA_SONGLIST = "at.ac.univie.a1209967.millionsongdataset.SONGLIST";
+    public final static String EXTRA_SONG ="at.ac.univie.a1209967.millionsongdataset.SONG";
 
 
 
 
 
-    @Override
+     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_player);
@@ -184,9 +185,9 @@ public class PlayerActivity extends AppCompatActivity implements MediaPlayerCont
         skipfBtn.setOnClickListener(this);
         skipbBtn.setOnClickListener(this);
 
-        titelView.setText(songList.get(1).getTitle());
-        interpretView.setText(songList.get(1).getTitle());
-        albumView.setText(songList.get(1).getAlbum());
+        titelView.setText(songList.get(0).getTitle());
+        interpretView.setText(songList.get(0).getTitle());
+        albumView.setText(songList.get(0).getAlbum());
         maxTimeView.setText(String.format("%02d : %02d ",
                 TimeUnit.MILLISECONDS.toMinutes(songList.get(1).getLength()),
                 TimeUnit.MILLISECONDS.toSeconds(songList.get(1).getLength()) -
@@ -229,7 +230,7 @@ public class PlayerActivity extends AppCompatActivity implements MediaPlayerCont
             public void onClick(View view) {
                 Intent sugIntent = new Intent(getApplicationContext(), SuggestionsActivity.class);
                 sugIntent.putExtra(EXTRA_SONGLIST, songList);
-                sugIntent.putExtra(EXTRA_HIST, historyList);
+                sugIntent.putExtra(EXTRA_HIST, songList);
                 startActivity(sugIntent);
             }
         });
@@ -238,6 +239,7 @@ public class PlayerActivity extends AppCompatActivity implements MediaPlayerCont
             @Override
             public void onClick(View view) {
                 Intent infoIntent = new Intent(getApplicationContext(), InfoActivity.class);
+                infoIntent.putExtra(EXTRA_SONG, songList.get(musicSrv.getSongPosn()));
                 startActivity(infoIntent);
             }
         });
@@ -583,11 +585,14 @@ public class PlayerActivity extends AppCompatActivity implements MediaPlayerCont
                     (android.provider.MediaStore.Audio.Media.ALBUM);
             int lengthColum = musicCursor.getColumnIndex
                     (android.provider.MediaStore.Audio.Media.DURATION);
+            int yearColum =  musicCursor.getColumnIndex
+            (android.provider.MediaStore.Audio.Media.YEAR);
             //add songs to list
             do{
                 Random rand = new Random();
                 long thisId = musicCursor.getLong(idColumn);
                 int length = musicCursor.getInt(lengthColum);
+                int year = musicCursor.getInt(yearColum);
                 String thisTitle = musicCursor.getString(titleColumn);
                 String thisArtist = musicCursor.getString(artistColumn);
                 String thisAlbum = musicCursor.getString(albumColum);
@@ -595,12 +600,12 @@ public class PlayerActivity extends AppCompatActivity implements MediaPlayerCont
 
                 if (!selectedItem.equals("")){
                     if (genre.equals(genreList.get(Integer.parseInt(selectedItem)))){
-                        songList.add(new Song(thisId, thisTitle, thisArtist, thisAlbum, length, genre));
+                        songList.add(new Song(thisId, thisTitle, thisArtist, thisAlbum, length, genre, year));
                         i++;
                     }
                 }
                 else{
-                    songList.add(new Song(thisId, thisTitle, thisArtist, thisAlbum, length, genre));
+                    songList.add(new Song(thisId, thisTitle, thisArtist, thisAlbum, length, genre, year));
                     i++;
                 }
             }
@@ -705,7 +710,7 @@ public class PlayerActivity extends AppCompatActivity implements MediaPlayerCont
 
     public void setTimeBar(){
         timeBar.setMax(songList.get(musicSrv.getSongPosn()).getLength()/1000);
-        timeBar.setProgress(currentPos);
+        timeBar.setProgress(currentPos/1000);
     }
 
 }

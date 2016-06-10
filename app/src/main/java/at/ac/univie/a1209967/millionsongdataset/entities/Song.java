@@ -10,13 +10,14 @@ import java.io.Serializable;
 public class Song implements Serializable {
     private long id;
     private int length;
+    private int year;
     private String title;
     private String artist;
     private String album;
     private String genre;
     private boolean fav;
 
-    public Song(long songID, String songTitle, String songArtist, String songAlbum, int l, String g) {
+    public Song(long songID, String songTitle, String songArtist, String songAlbum, int l, String g, int y) {
         id=songID;
         title=songTitle;
         artist=songArtist;
@@ -24,6 +25,7 @@ public class Song implements Serializable {
         length=l;
         genre = g;
         fav = false;
+        year = y;
     }
 
     public long getID(){return id;}
@@ -34,4 +36,6 @@ public class Song implements Serializable {
     public String getGenre(){return genre;}
     public void setFav(boolean f){ fav = f;}
     public boolean getFav() {return fav;}
+    public int getYear() {  return year;   }
+
 }
