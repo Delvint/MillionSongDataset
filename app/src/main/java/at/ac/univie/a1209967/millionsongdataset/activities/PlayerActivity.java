@@ -96,8 +96,9 @@ public class PlayerActivity extends AppCompatActivity implements MediaPlayerCont
     private TextView interpretView;
     private TextView albumView;
     private TextView maxTimeView;
+    private TextView minTimeView;
     private SeekBar timeBar;
-     private int currentPos;
+    private int currentPos;
 
     private static final String CLIENT_ID = "c57b7c1903b146ae93e23873ab5abf3f";
     private static final String REDIRECT_URI = "MillionSongDataset-a1209967://callback";
@@ -166,6 +167,7 @@ public class PlayerActivity extends AppCompatActivity implements MediaPlayerCont
         interpretView = (TextView)findViewById(R.id.int_View);
         albumView = (TextView)findViewById(R.id.album_View);
         maxTimeView = (TextView)findViewById(R.id.max_Time);
+        minTimeView = (TextView)findViewById(R.id.zero_Time);
 
         shuffleBtn.setImageResource(R.drawable.shuffle_not);
         repeatBtn = (ImageButton)findViewById(R.id.repeat_Btn);
@@ -278,14 +280,14 @@ public class PlayerActivity extends AppCompatActivity implements MediaPlayerCont
             public void run() {
                 if(musicSrv != null && !playbackPaused){
                     int mCurrentPosition = getCurrentPosition()/1000;
+                    System.err.println( getCurrentPosition()/1000);
                     currentPos = mCurrentPosition;
-                    timeBar.setProgress(mCurrentPosition);
-                    System.err.println(mCurrentPosition);
+                    setTimeBar();
+                    setText();
                 }
                 seekHandler.postDelayed(this, 1000);
             }
         });
-
     }
 
      public void onClick(View v) {
@@ -317,7 +319,6 @@ public class PlayerActivity extends AppCompatActivity implements MediaPlayerCont
 
                  play();
                  //adding played song to history
-
 
                  if(songList.get(musicSrv.getSongPosn())!=null && !(historyList.contains(songList.get(musicSrv.getSongPosn())))) {
                      historyList.add(songList.get(musicSrv.getSongPosn()));
@@ -495,11 +496,11 @@ public class PlayerActivity extends AppCompatActivity implements MediaPlayerCont
 
     public  void play(){
         if (playbackPaused) {
-            seekTo(currentPos);
+            seekTo(currentPos*1000);
             musicSrv.playSong(playbackPaused);
-            System.err.println("                        " + currentPos);
             setText();
             setTimeBar();
+            System.err.println("                        " + currentPos);
             playBtn.setImageResource(R.drawable.pause);
             playbackPaused = false;
         } else {
@@ -510,6 +511,7 @@ public class PlayerActivity extends AppCompatActivity implements MediaPlayerCont
 
     //play next
     private void playNext(){
+        currentPos = 0;
         musicSrv.playNext(playbackPaused);
         setText();
         setTimeBar();
@@ -519,6 +521,7 @@ public class PlayerActivity extends AppCompatActivity implements MediaPlayerCont
     }
 
      private void skipb(){
+         currentPos =0;
          musicSrv.skipb();
          setText();
          setTimeBar();
@@ -527,6 +530,7 @@ public class PlayerActivity extends AppCompatActivity implements MediaPlayerCont
 
      //play previous
     private void playPrev(){
+        currentPos =0;
         musicSrv.playPrev(playbackPaused);
         setText();
         setTimeBar();
@@ -536,6 +540,7 @@ public class PlayerActivity extends AppCompatActivity implements MediaPlayerCont
     }
 
      private void skipf(){
+         currentPos =0;
          musicSrv.skipf();
          setText();
          setTimeBar();
@@ -612,6 +617,7 @@ public class PlayerActivity extends AppCompatActivity implements MediaPlayerCont
     @Override
     public void pause() {
         playbackPaused=true;
+        currentPos = getCurrentPosition();
         musicSrv.pausePlayer();
     }
 
@@ -689,12 +695,17 @@ public class PlayerActivity extends AppCompatActivity implements MediaPlayerCont
                 TimeUnit.MILLISECONDS.toSeconds(songList.get(musicSrv.getSongPosn()).getLength()) -
                         TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(songList.get(musicSrv.getSongPosn()).getLength()))
         )));
+        minTimeView.setText((String.format("%02d : %02d ",
+             TimeUnit.MILLISECONDS.toMinutes(getCurrentPosition()),
+             TimeUnit.MILLISECONDS.toSeconds(getCurrentPosition()) -
+                     TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(getCurrentPosition()))
+        )));
 
     }
 
     public void setTimeBar(){
         timeBar.setMax(songList.get(musicSrv.getSongPosn()).getLength()/1000);
-        timeBar.setProgress(0);
+        timeBar.setProgress(currentPos);
     }
 
 }
