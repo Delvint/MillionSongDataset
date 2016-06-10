@@ -4,6 +4,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import at.ac.univie.a1209967.millionsongdataset.R;
 
@@ -24,7 +25,7 @@ public class UsermenuActivity extends AppCompatActivity {
         settingsBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                Toast.makeText(getApplicationContext(), "to be implemented ...", Toast.LENGTH_LONG).show();
             }
         });
 
@@ -32,7 +33,7 @@ public class UsermenuActivity extends AppCompatActivity {
         persBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                Toast.makeText(getApplicationContext(), "to be implemented ...", Toast.LENGTH_LONG).show();
             }
         });
 
@@ -40,7 +41,7 @@ public class UsermenuActivity extends AppCompatActivity {
         impBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                Toast.makeText(getApplicationContext(), "to be implemented ...", Toast.LENGTH_LONG).show();
             }
         });
 
@@ -48,7 +49,7 @@ public class UsermenuActivity extends AppCompatActivity {
         moreBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                Toast.makeText(getApplicationContext(), "to be implemented ...", Toast.LENGTH_LONG).show();
             }
         });
 
