@@ -8,6 +8,7 @@ import android.media.Image;
 import android.os.IBinder;
 import android.provider.MediaStore;
 import android.provider.Settings;
+import android.support.annotation.RequiresPermission;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
@@ -17,7 +18,10 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Random;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import android.os.Handler;
 
 import android.net.Uri;
 import android.content.ContentResolver;
@@ -71,6 +75,7 @@ public class PlayerActivity extends AppCompatActivity implements MediaPlayerCont
     private boolean musicBound=false;
     private MusicController controller;
     private boolean paused=false, playbackPaused=true, pref=false, shuffle=false, loop=false;
+    private Handler seekHandler = new Handler();
 
     private String selectedItem = "";
     private Button nextBtn;
@@ -92,6 +97,7 @@ public class PlayerActivity extends AppCompatActivity implements MediaPlayerCont
     private TextView albumView;
     private TextView maxTimeView;
     private SeekBar timeBar;
+     private int currentPos;
 
     private static final String CLIENT_ID = "c57b7c1903b146ae93e23873ab5abf3f";
     private static final String REDIRECT_URI = "MillionSongDataset-a1209967://callback";
@@ -118,6 +124,7 @@ public class PlayerActivity extends AppCompatActivity implements MediaPlayerCont
         historyList = new ArrayList<Song>();
         favList = new ArrayList<Song>();
 
+        currentPos = 0;
 
 
         genreList =new ArrayList<>(Arrays.asList("acoustic", "afrobeat", "alt-rock", "alternative", "ambient", "anime", "black-metal", "bluegrass", "blues", "bossanova", "brazil", "breakbeat", "british", "cantopop", "chicago-house", "children", "chill", "classical", "club", "comedy", "country", "dance", "dancehall", "death-metal", "deep-house", "detroit-techno", "disco", "disney", "drum-and-bass", "dub", "dubstep", "edm", "electro", "electronic", "emo", "folk", "forro", "french", "funk", "garage", "german", "gospel", "goth", "grindcore", "groove", "grunge", "guitar", "happy", "hard-rock", "hardcore", "hardstyle", "heavy-metal", "hip-hop", "holidays", "honky-tonk", "house", "idm", "indian", "indie", "indie-pop", "industrial", "iranian", "j-dance", "j-idol", "j-pop", "j-rock", "jazz", "k-pop", "kids", "latin", "latino", "malay", "mandopop", "metal", "metal-misc", "metalcore", "minimal-techno", "movies", "mpb", "new-age", "new-release", "opera", "pagode", "party", "philippines-opm", "piano", "pop", "pop-film", "post-dubstep", "power-pop", "progressive-house", "psych-rock", "punk", "punk-rock", "r-n-b", "rainy-day", "reggae", "reggaeton", "road-trip", "rock", "rock-n-roll", "rockabilly", "romance", "sad", "salsa", "samba", "sertanejo", "show-tunes", "singer-songwriter", "ska", "sleep", "songwriter", "soul", "soundtracks", "spanish", "study", "summer", "swedish", "synth-pop", "tango", "techno", "trance", "trip-hop", "turkish", "work-out", "world-music"));
@@ -138,7 +145,7 @@ public class PlayerActivity extends AppCompatActivity implements MediaPlayerCont
 
 
         timeBar = (SeekBar)findViewById(R.id.seekBar);
-        timeBar.setMax(songList.get(0).getLength());
+        timeBar.setMax(songList.get(0).getLength()/1000);
         timeBar.setProgress(0);
 
         nextBtn = (Button)findViewById(R.id.next_Btn);
@@ -239,11 +246,11 @@ public class PlayerActivity extends AppCompatActivity implements MediaPlayerCont
 
 
         timeBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            int progressChanged = 0;
 
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser){
-                progressChanged = progress;
-                seekTo(progress);
+                if(musicSrv != null && fromUser) {
+                    seekTo(progress*1000);
+                }
             }
 
             public void onStartTrackingTouch(SeekBar seekBar) {
@@ -255,6 +262,22 @@ public class PlayerActivity extends AppCompatActivity implements MediaPlayerCont
 
 
         setController();
+
+        //Make sure you update Seekbar on UI thread
+        PlayerActivity.this.runOnUiThread(new Runnable() {
+
+            @Override
+            public void run() {
+                if(musicSrv != null && !playbackPaused){
+                    int mCurrentPosition = getCurrentPosition()/1000;
+                    currentPos = mCurrentPosition;
+                    timeBar.setProgress(mCurrentPosition);
+                    System.err.println(mCurrentPosition);
+                }
+                seekHandler.postDelayed(this, 1000);
+            }
+        });
+
     }
 
      public void onClick(View v) {
@@ -282,20 +305,9 @@ public class PlayerActivity extends AppCompatActivity implements MediaPlayerCont
              }
 
              case R.id.play_Btn: {
-                 play();
                 /*added*/
-                 if (paused) {
-                     musicSrv.playSong();
-                     setText();
-                     setTimeBar();
-                     playBtn.setImageResource(R.drawable.pause);
-                     paused = !paused;
-                 } else {
-                     musicSrv.pausePlayer();
-                     playBtn.setImageResource(R.drawable.play);
-                     paused = !paused;
-                 }
 
+                 play();
                  //adding played song to history
 
 
@@ -317,13 +329,31 @@ public class PlayerActivity extends AppCompatActivity implements MediaPlayerCont
              }
 
              case R.id.skipf_Btn: {
-                 playNext();
+                 if (songList.get(musicSrv.getSongPosn()).getFav()) {
+                     favBtn.setImageResource(R.drawable.favorite);
+                 }
+                 else {
+                     favBtn.setImageResource(R.drawable.favorite_not);
+                 }
+                 if (playbackPaused)
+                     skipf();
+                 else
+                     playNext();
                  break;
              }
 
 
              case R.id.skipb_Btn: {
-                 playPrev();
+                 if (songList.get(musicSrv.getSongPosn()).getFav()) {
+                     favBtn.setImageResource(R.drawable.favorite);
+                 }
+                 else {
+                     favBtn.setImageResource(R.drawable.favorite_not);
+                 }
+                 if (playbackPaused)
+                     skipb();
+                 else
+                    playPrev();
                  break;
              }
 
@@ -331,12 +361,12 @@ public class PlayerActivity extends AppCompatActivity implements MediaPlayerCont
                  if (!songList.get(musicSrv.getSongPosn()).getFav()) {
                      favBtn.setImageResource(R.drawable.favorite);
                      songList.get(musicSrv.getSongPosn()).setFav(true);
-                     favList.add( musicSrv.getSongPosn(), songList.get(musicSrv.getSongPosn()));
+                     favList.add(songList.get(musicSrv.getSongPosn()));
                  }
                  else {
                      favBtn.setImageResource(R.drawable.favorite_not);
                      songList.get(musicSrv.getSongPosn()).setFav(false);
-                     favList.remove(musicSrv.getSongPosn());
+                     favList.remove(songList.get(musicSrv.getSongPosn()));
                  }
              }
 
@@ -371,8 +401,6 @@ public class PlayerActivity extends AppCompatActivity implements MediaPlayerCont
             bindService(playIntent, musicConnection, Context.BIND_AUTO_CREATE);
             startService(playIntent);
         }
-
-
     }
 
     @Override
@@ -406,7 +434,7 @@ public class PlayerActivity extends AppCompatActivity implements MediaPlayerCont
 
     public void songPicked(View view){
         musicSrv.setSong(Integer.parseInt(view.getTag().toString()));
-        musicSrv.playSong();
+        musicSrv.playSong(playbackPaused);
         setText();
         setTimeBar();
         playBtn.setImageResource(R.drawable.pause);
@@ -458,37 +486,51 @@ public class PlayerActivity extends AppCompatActivity implements MediaPlayerCont
 
     public  void play(){
         if (playbackPaused) {
-            musicSrv.playSong();
+            seekTo(currentPos);
+            musicSrv.playSong(playbackPaused);
+            System.err.println("                        " + currentPos);
             setText();
             setTimeBar();
             playBtn.setImageResource(R.drawable.pause);
-            playbackPaused = !playbackPaused;
+            playbackPaused = false;
         } else {
-            musicSrv.pausePlayer();
+            pause();
             playBtn.setImageResource(R.drawable.play);
-            playbackPaused = !playbackPaused;
         }
     }
 
     //play next
     private void playNext(){
-        musicSrv.playNext();
+        musicSrv.playNext(playbackPaused);
         setText();
         setTimeBar();
         playBtn.setImageResource(R.drawable.pause);
         if (playbackPaused)
-            playbackPaused = !playbackPaused;
+            playbackPaused = false;
     }
 
-    //play previous
+     private void skipb(){
+         musicSrv.skipb();
+         setText();
+         setTimeBar();
+     }
+
+
+     //play previous
     private void playPrev(){
-        musicSrv.playPrev();
+        musicSrv.playPrev(playbackPaused);
         setText();
         setTimeBar();
         playBtn.setImageResource(R.drawable.pause);
         if (playbackPaused)
-            playbackPaused = !playbackPaused;
+            playbackPaused = false;
     }
+
+     private void skipf(){
+         musicSrv.skipf();
+         setText();
+         setTimeBar();
+     }
 
     private void setShuffle(){
         musicSrv.setShuffle();
@@ -539,7 +581,6 @@ public class PlayerActivity extends AppCompatActivity implements MediaPlayerCont
 
                 if (!selectedItem.equals("")){
                     if (genre.equals(genreList.get(Integer.parseInt(selectedItem)))){
-                        System.err.println(genreList.get(Integer.parseInt(selectedItem)));
                         songList.add(new Song(thisId, thisTitle, thisArtist, thisAlbum, length, genre));
                         i++;
                     }
@@ -643,11 +684,8 @@ public class PlayerActivity extends AppCompatActivity implements MediaPlayerCont
     }
 
     public void setTimeBar(){
-        timeBar.setMax(songList.get(musicSrv.getSongPosn()).getLength());
+        timeBar.setMax(songList.get(musicSrv.getSongPosn()).getLength()/1000);
         timeBar.setProgress(0);
     }
-
-
-
 
 }

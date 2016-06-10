@@ -60,6 +60,10 @@ public class MusicService extends Service implements
         initMusicPlayer();
     }
 
+    public int getCurrentPosition(){
+        return player.getCurrentPosition();
+    }
+
     @Override
     public void onPrepared(MediaPlayer mp) {
         //start playback
@@ -92,10 +96,9 @@ public class MusicService extends Service implements
         player.setOnErrorListener(this);
     }
 
-    public void playSong(){
+    public void playSong(boolean playbackPaused){
         player.reset();
 
-        //get song
         Song playSong = songs.get(songPosn);
         songTitle=playSong.getTitle();
         //get id
@@ -168,14 +171,19 @@ public class MusicService extends Service implements
         player.start();
     }
 
-    public void playPrev(){
+    public void playPrev(boolean playbackPaused){
         songPosn--;
         if(songPosn < 0) songPosn=songs.size()-1;
-        playSong();
+        playSong(playbackPaused);
+    }
+
+    public void skipf(){
+        songPosn--;
+        if(songPosn < 0) songPosn=songs.size()-1;
     }
 
     //skip to next
-    public void playNext(){
+    public void playNext(boolean playbackPaused){
         if(shuffle){
             int newSong = songPosn;
             while(newSong==songPosn){
@@ -188,8 +196,24 @@ public class MusicService extends Service implements
         else{
             songPosn++;
             if(songPosn>=songs.size()) songPosn=0;}
-        playSong();
+        playSong(playbackPaused);
     }
+
+    public void skipb(){
+        if(shuffle){
+            int newSong = songPosn;
+            while(newSong==songPosn){
+                newSong=rand.nextInt(songs.size());
+            }
+            songPosn=newSong;
+        }
+        else if (loop){
+        }
+        else{
+            songPosn++;
+            if(songPosn>=songs.size()) songPosn=0;}
+    }
+
 
 
     @Override
@@ -208,7 +232,7 @@ public class MusicService extends Service implements
     public void onCompletion(MediaPlayer mp) {
         if(player.getCurrentPosition()>0){
             mp.reset();
-            playNext();
+            playNext(false);
         }
     }
 
