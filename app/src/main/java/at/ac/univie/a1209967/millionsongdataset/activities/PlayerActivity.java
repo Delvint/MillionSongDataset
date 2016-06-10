@@ -262,6 +262,9 @@ public class PlayerActivity extends AppCompatActivity implements MediaPlayerCont
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser){
                 if(musicSrv != null && fromUser) {
                     seekTo(progress*1000);
+                    setText();
+                    if (playbackPaused)
+                        play();
                 }
             }
 
@@ -283,8 +286,7 @@ public class PlayerActivity extends AppCompatActivity implements MediaPlayerCont
                 if(musicSrv != null && !playbackPaused){
                     int mCurrentPosition = getCurrentPosition()/1000;
                     System.err.println( getCurrentPosition()/1000);
-                    currentPos = mCurrentPosition;
-                    setTimeBar();
+                    //currentPos = mCurrentPosition;
                     setText();
                 }
                 seekHandler.postDelayed(this, 1000);
@@ -501,7 +503,6 @@ public class PlayerActivity extends AppCompatActivity implements MediaPlayerCont
             seekTo(currentPos*1000);
             musicSrv.playSong(playbackPaused);
             setText();
-            setTimeBar();
             System.err.println("                        " + currentPos);
             playBtn.setImageResource(R.drawable.pause);
             playbackPaused = false;
