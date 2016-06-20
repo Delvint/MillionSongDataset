@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -37,6 +38,9 @@ public class FavouritesActivity extends AppCompatActivity {
                 favList.add(songList.get(i));
             }
         }
+
+        if (favList.size() == 0)
+            Toast.makeText(getApplicationContext(), "There were no songs added to favourites yet.", Toast.LENGTH_LONG).show();
 
         //favList=songList;
 

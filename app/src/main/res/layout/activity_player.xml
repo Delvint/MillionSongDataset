@@ -69,7 +69,8 @@
             android:progressDrawable="@drawable/millionsongdataset_scrubber_progress_horizontal_holo_dark"
             android:thumb="@drawable/millionsongdataset_scrubber_control_selector_holo_dark"
             android:layout_alignParentBottom="true"
-            android:layout_alignParentStart="true" />
+            android:layout_alignParentStart="true"
+            android:layout_alignParentLeft="true"/>
         <ImageButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -77,7 +78,8 @@
             android:src="@drawable/skip_back"
             android:background="@null"
             android:layout_alignTop="@+id/skipf_Btn"
-            android:layout_toStartOf="@+id/play_Btn" />
+            android:layout_toStartOf="@+id/play_Btn"
+            android:layout_toLeftOf="@+id/play_Btn" />
 
         <ImageButton
             android:layout_width="wrap_content"
@@ -86,6 +88,7 @@
             android:background="@null"
             android:layout_above="@+id/play_Btn"
             android:layout_toEndOf="@+id/play_Btn"
+            android:layout_toRightOf="@+id/play_Btn"
             android:src="@drawable/repeat" />
 
         <ImageButton
@@ -95,7 +98,8 @@
             android:src="@drawable/skip_forward"
             android:background="@null"
             android:layout_above="@+id/seekBar"
-            android:layout_alignStart="@+id/repeat_Btn" />
+            android:layout_alignStart="@+id/repeat_Btn"
+            android:layout_alignLeft="@+id/repeat_Btn" />
 
         <ImageButton
             android:layout_width="wrap_content"
@@ -104,6 +108,7 @@
             android:background="@null"
             android:layout_above="@+id/play_Btn"
             android:layout_toStartOf="@+id/play_Btn"
+            android:layout_toLeftOf="@+id/play_Btn"
             android:src="@drawable/shuffle" />
 
         <TextView
@@ -146,6 +151,7 @@
             android:background="@null"
             android:layout_alignTop="@+id/shuffle_Btn"
             android:layout_toStartOf="@+id/shuffle_Btn"
+            android:layout_toLeftOf="@+id/shuffle_Btn"
             android:layout_marginRight="45dp" />
 
         <ImageButton
@@ -156,6 +162,7 @@
             android:background="@null"
             android:layout_alignTop="@+id/repeat_Btn"
             android:layout_toEndOf="@+id/repeat_Btn"
+            android:layout_toRightOf="@+id/repeat_Btn"
             android:layout_marginLeft="45dp" />
 
         <TextView
@@ -166,6 +173,7 @@
             android:id="@+id/zero_Time"
             android:layout_above="@+id/seekBar"
             android:layout_alignParentStart="true"
+            android:layout_alignParentLeft="true"
             android:layout_marginLeft="3dp" />
 
         <TextView
@@ -175,6 +183,7 @@
             android:id="@+id/max_Time"
             android:layout_above="@+id/seekBar"
             android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
             android:layout_marginRight="3dp" />
 
     </RelativeLayout>

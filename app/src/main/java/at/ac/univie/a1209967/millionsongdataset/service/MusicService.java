@@ -69,6 +69,7 @@ public class MusicService extends Service implements
         //start playback
         mp.start();
 
+        Notification not;
         Intent notIntent = new Intent(this, PlayerActivity.class);
         notIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         PendingIntent pendInt = PendingIntent.getActivity(this, 0,
@@ -82,7 +83,15 @@ public class MusicService extends Service implements
                 .setOngoing(true)
                 .setContentTitle("Playing")
         .setContentText(songTitle);
-        Notification not = builder.build();
+
+        int currentapiVersion = android.os.Build.VERSION.SDK_INT;
+        if (currentapiVersion <= android.os.Build.VERSION_CODES.LOLLIPOP){
+            not = new Notification.Builder(getApplicationContext())
+                    .setContentTitle("Title").setContentText("Text")
+                    .setSmallIcon(R.drawable.menu_dots).getNotification();
+        } else{
+            not = builder.build();
+        }
 
         startForeground(NOTIFY_ID, not);
     }
@@ -96,7 +105,7 @@ public class MusicService extends Service implements
         player.setOnErrorListener(this);
     }
 
-    public void playSong(boolean playbackPaused){
+    public void playSong(){
         player.reset();
 
         Song playSong = songs.get(songPosn);
@@ -171,10 +180,10 @@ public class MusicService extends Service implements
         player.start();
     }
 
-    public void playPrev(boolean playbackPaused){
+    public void playPrev(){
         songPosn--;
         if(songPosn < 0) songPosn=songs.size()-1;
-        playSong(playbackPaused);
+        playSong();
     }
 
     public void skipf(){
@@ -183,7 +192,7 @@ public class MusicService extends Service implements
     }
 
     //skip to next
-    public void playNext(boolean playbackPaused){
+    public void playNext(){
         if(shuffle){
             int newSong = songPosn;
             while(newSong==songPosn){
@@ -196,7 +205,7 @@ public class MusicService extends Service implements
         else{
             songPosn++;
             if(songPosn>=songs.size()) songPosn=0;}
-        playSong(playbackPaused);
+        playSong();
     }
 
     public void skipb(){
@@ -232,7 +241,7 @@ public class MusicService extends Service implements
     public void onCompletion(MediaPlayer mp) {
         if(player.getCurrentPosition()>0){
             mp.reset();
-            playNext(false);
+            playNext();
         }
     }
 

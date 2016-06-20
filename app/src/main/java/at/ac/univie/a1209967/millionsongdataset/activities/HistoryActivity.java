@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -35,12 +36,15 @@ public class HistoryActivity extends AppCompatActivity {
 
         Intent historyIntent= getIntent();
         historyList = (ArrayList<Song>) historyIntent.getSerializableExtra(PlayerActivity.EXTRA_HIST);
+
         if(historyList!=null) {
             historyView = (ListView) findViewById(R.id.historyList);
 
             SongAdapter histAdt = new SongAdapter(this, historyList);
             historyView.setAdapter(histAdt);
         }
+        if (historyList.size() == 0)
+            Toast.makeText(getApplicationContext(), "There were no songs played yet.", Toast.LENGTH_LONG).show();
 
         backBtn = (Button) findViewById(R.id.backBtn);
         backBtn.setOnClickListener(new View.OnClickListener() {
